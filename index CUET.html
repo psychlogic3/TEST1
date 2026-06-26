@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PsychLogic Mock Test 1234</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #2d3748;
+  }
+  .container {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 700px;
+    overflow: hidden;
+  }
+  .header {
+    background: #4c51bf;
+    color: #fff;
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .header h1 { font-size: 1.4rem; font-weight: 600; }
+  .timer {
+    background: rgba(255,255,255,0.2);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .timer.warning { background: #e53e3e; }
+  .screen { padding: 40px 32px; display: none; }
+  .screen.active { display: block; }
+
+  /* Login screen */
+  #loginScreen h2 { font-size: 1.6rem; margin-bottom: 8px; color: #2d3748; }
+  #loginScreen .subtitle { color: #718096; margin-bottom: 28px; font-size: 0.95rem; }
+  .info-box {
+    background: #ebf4ff;
+    border-left: 4px solid #4c51bf;
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin-bottom: 24px;
+    font-size: 0.9rem;
+    color: #2c5282;
+  }
+  .info-box ul { margin: 8px 0 0 20px; }
+  .info-box li { margin: 4px 0; }
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+  }
+  input[type="email"], input[type="text"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+  }
+  input[type="email"]:focus, input[type="text"]:focus {
+    outline: none;
+    border-color: #4c51bf;
+  }
+  .error {
+    color: #e53e3e;
+    font-size: 0.85rem;
+    margin-top: 6px;
+    min-height: 18px;
+  }
+  button {
+    background: #4c51bf;
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.2s;
+  }
+  button:hover { background: #434190; }
+  button:disabled { background: #a0aec0; cursor: not-allowed; }
+
+  /* Quiz screen */
+  .progress-bar {
+    background: #e2e8f0;
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .progress-fill {
+    background: #4c51bf;
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s;
+  }
+  .q-number {
+    color: #718096;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .q-text {
+    font-size: 1.15rem;
+    line-height: 1.5;
+    margin-bottom: 24px;
+    color: #2d3748;
+  }
+  .options { list-style: none; }
+  .option {
+    background: #f7fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .option:hover { border-color: #cbd5e0; background: #edf2f7; }
+  .option.selected {
+    border-color: #4c51bf;
+    background: #ebf4ff;
+  }
+  .option-letter {
+    background: #fff;
+    border: 2px solid #cbd5e0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .option.selected .option-letter {
+    background: #4c51bf;
+    color: #fff;
+    border-color: #4c51bf;
+  }
+  .nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 28px;
+    gap: 10px;
+  }
+  .btn-secondary { background: #e2e8f0; color: #2d3748; }
+  .btn-secondary:hover { background: #cbd5e0; }
+
+  /* Result screen */
+  #resultScreen { text-align: center; }
+  .score-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4c51bf, #764ba2);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+  .score-circle .num { font-size: 2.5rem; font-weight: 700; line-height: 1; }
+  .score-circle .label { font-size: 0.85rem; opacity: 0.9; margin-top: 4px; }
+  .result-title { font-size: 1.6rem; margin-bottom: 8px; }
+  .result-subtitle { color: #718096; margin-bottom: 28px; }
+  .review {
+    text-align: left;
+    margin-top: 28px;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 24px;
+  }
+  .review h3 { margin-bottom: 16px; font-size: 1.1rem; }
+  .review-item {
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background: #f7fafc;
+    border-left: 4px solid #cbd5e0;
+  }
+  .review-item.correct { border-left-color: #38a169; }
+  .review-item.wrong { border-left-color: #e53e3e; }
+  .review-item.skipped { border-left-color: #d69e2e; }
+  .review-item .rq { font-weight: 600; margin-bottom: 6px; font-size: 0.95rem; }
+  .review-item .ra { font-size: 0.88rem; color: #4a5568; }
+  .review-item .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+  .tag.correct { background: #c6f6d5; color: #22543d; }
+  .tag.wrong { background: #fed7d7; color: #742a2a; }
+  .tag.skipped { background: #faf089; color: #744210; }
+
+  @media (max-width: 500px) {
+    .screen { padding: 28px 20px; }
+    .header { padding: 18px 20px; }
+    .header h1 { font-size: 1.15rem; }
+    .q-text { font-size: 1.05rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>PsychLogic Mock Test</h1>
+    <div class="timer" id="timer" style="display:none;">⏱ 05:00</div>
+  </div>
+
+  <!-- LOGIN SCREEN -->
+  <div class="screen active" id="loginScreen">
+    <h2>Welcome to the Mock Test</h2>
+    <p class="subtitle">Basic Psychology — Sample Quiz</p>
+    <div class="info-box">
+      <strong>Test Instructions:</strong>
+      <ul>
+        <li>10 questions, 1 mark each (Total: 10 marks)</li>
+        <li>Time limit: 5 minutes</li>
+        <li>No negative marking</li>
+        <li>You can navigate between questions before submitting</li>
+      </ul>
+    </div>
+    <label for="emailInput">Enter your registered email address</label>
+    <input type="email" id="emailInput" placeholder="name@example.com" autocomplete="email">
+    <div class="error" id="emailError"></div>
+    <button onclick="startQuiz()">Start Test →</button>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div class="screen" id="quizScreen">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="q-number" id="qNumber">Question 1 of 10</div>
+    <div class="q-text" id="qText"></div>
+    <ul class="options" id="optionsList"></ul>
+    <div class="nav-buttons">
+      <button class="btn-secondary" id="prevBtn" onclick="prevQuestion()">← Previous</button>
+      <button id="nextBtn" onclick="nextQuestion()">Next →</button>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div class="screen" id="resultScreen">
+    <div class="score-circle">
+      <div class="num" id="finalScore">0</div>
+      <div class="label">out of 10</div>
+    </div>
+    <h2 class="result-title" id="resultTitle">Test Complete!</h2>
+    <p class="result-subtitle" id="resultSubtitle"></p>
+    <div class="review">
+      <h3>Answer Review</h3>
+      <div id="reviewList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "Who is widely regarded as the father of psychoanalysis?",
+    options: ["Carl Jung", "Sigmund Freud", "B.F. Skinner", "Ivan Pavlov"],
+    answer: 1
+  },
+  {
+    q: "Which part of the brain is primarily associated with the formation of new memories?",
+    options: ["Cerebellum", "Amygdala", "Hippocampus", "Thalamus"],
+    answer: 2
+  },
+  {
+    q: "Classical conditioning is most strongly associated with which psychologist?",
+    options: ["Ivan Pavlov", "John Watson", "Albert Bandura", "Edward Thorndike"],
+    answer: 0
+  },
+  {
+    q: "At the top of Maslow's hierarchy of needs lies:",
+    options: ["Safety needs", "Esteem needs", "Belongingness", "Self-actualization"],
+    answer: 3
+  },
+  {
+    q: "Which neurotransmitter is most commonly linked to mood regulation and depression?",
+    options: ["Dopamine", "Serotonin", "Acetylcholine", "GABA"],
+    answer: 1
+  },
+  {
+    q: "The famous Bobo doll experiment on observational learning was conducted by:",
+    options: ["Jean Piaget", "Lev Vygotsky", "Albert Bandura", "Erik Erikson"],
+    answer: 2
+  },
+  {
+    q: "Which of the following is NOT a stage in Piaget's theory of cognitive development?",
+    options: ["Sensorimotor", "Preoperational", "Latency", "Formal operational"],
+    answer: 2
+  },
+  {
+    q: "The 'Big Five' personality traits are commonly remembered by the acronym:",
+    options: ["OCEAN", "PEACE", "BRAIN", "MIND"],
+    answer: 0
+  },
+  {
+    q: "Operant conditioning, involving reinforcement and punishment, is most associated with:",
+    options: ["Sigmund Freud", "B.F. Skinner", "Carl Rogers", "Wilhelm Wundt"],
+    answer: 1
+  },
+  {
+    q: "The most widely used individually-administered intelligence test for adults is the:",
+    options: ["Stanford-Binet", "WAIS", "Raven's Matrices", "MMPI"],
+    answer: 1
+  }
+];
+
+let currentQ = 0;
+let answers = new Array(questions.length).fill(null);
+let userEmail = "";
+let timeLeft = 5 * 60;
+let timerInterval = null;
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function startQuiz() {
+  const email = document.getElementById("emailInput").value.trim();
+  const errEl = document.getElementById("emailError");
+  if (!email) { errEl.textContent = "Please enter your email address."; return; }
+  if (!isValidEmail(email)) { errEl.textContent = "Please enter a valid email address."; return; }
+  userEmail = email;
+  document.getElementById("loginScreen").classList.remove("active");
+  document.getElementById("quizScreen").classList.add("active");
+  document.getElementById("timer").style.display = "block";
+  startTimer();
+  renderQuestion();
+}
+
+function startTimer() {
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 60) document.getElementById("timer").classList.add("warning");
+    if (timeLeft <= 0) { clearInterval(timerInterval); submitQuiz(); }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = String(Math.floor(timeLeft / 60)).padStart(2, "0");
+  const s = String(timeLeft % 60).padStart(2, "0");
+  document.getElementById("timer").textContent = `⏱ ${m}:${s}`;
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById("qNumber").textContent = `Question ${currentQ + 1} of ${questions.length}`;
+  document.getElementById("qText").textContent = q.q;
+  document.getElementById("progressFill").style.width = ((currentQ + 1) / questions.length * 100) + "%";
+  const letters = ["A", "B", "C", "D"];
+  const list = document.getElementById("optionsList");
+  list.innerHTML = "";
+  q.options.forEach((opt, i) => {
+    const li = document.createElement("li");
+    li.className = "option" + (answers[currentQ] === i ? " selected" : "");
+    li.innerHTML = `<div class="option-letter">${letters[i]}</div><div>${opt}</div>`;
+    li.onclick = () => { answers[currentQ] = i; renderQuestion(); };
+    list.appendChild(li);
+  });
+  document.getElementById("prevBtn").style.visibility = currentQ === 0 ? "hidden" : "visible";
+  document.getElementById("nextBtn").textContent = currentQ === questions.length - 1 ? "Submit ✓" : "Next →";
+}
+
+function nextQuestion() {
+  if (currentQ === questions.length - 1) {
+    if (confirm("Submit your test? You won't be able to change answers after this.")) submitQuiz();
+  } else {
+    currentQ++;
+    renderQuestion();
+  }
+}
+
+function prevQuestion() {
+  if (currentQ > 0) { currentQ--; renderQuestion(); }
+}
+
+function submitQuiz() {
+  clearInterval(timerInterval);
+  let score = 0;
+  questions.forEach((q, i) => { if (answers[i] === q.answer) score++; });
+  document.getElementById("quizScreen").classList.remove("active");
+  document.getElementById("resultScreen").classList.add("active");
+  document.getElementById("timer").style.display = "none";
+  document.getElementById("finalScore").textContent = score;
+  let msg = "";
+  if (score === 10) msg = "Outstanding! Perfect score.";
+  else if (score >= 7) msg = "Great work! Solid understanding.";
+  else if (score >= 5) msg = "Good attempt. Keep practicing.";
+  else msg = "Keep going — review the concepts and try again.";
+  document.getElementById("resultSubtitle").textContent = `${msg} (${userEmail})`;
+  const reviewList = document.getElementById("reviewList");
+  reviewList.innerHTML = "";
+  const letters = ["A", "B", "C", "D"];
+  questions.forEach((q, i) => {
+    const user = answers[i];
+    let status = "skipped", tag = "Skipped";
+    if (user === q.answer) { status = "correct"; tag = "Correct"; }
+    else if (user !== null) { status = "wrong"; tag = "Wrong"; }
+    const div = document.createElement("div");
+    div.className = "review-item " + status;
+    div.innerHTML = `
+      <div class="rq">Q${i + 1}. ${q.q} <span class="tag ${status}">${tag}</span></div>
+      <div class="ra">Your answer: ${user !== null ? letters[user] + ". " + q.options[user] : "Not answered"}<br>
+      Correct answer: ${letters[q.answer]}. ${q.options[q.answer]}</div>`;
+    reviewList.appendChild(div);
+  });
+}
+
+document.getElementById("emailInput").addEventListener("keypress", e => {
+  if (e.key === "Enter") startQuiz();
+});
+</script>
+</body>
+</html>
